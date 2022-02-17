@@ -8,9 +8,6 @@ import java.util.Scanner;
 
 /**
  * A Command Line Interface backed by a Scanner. Implemented as a Singleton.
- *
- * @author jerom
- *
  */
 public final class Cli {
     private final Properties props = new Properties();
@@ -35,7 +32,9 @@ public final class Cli {
     /**
      * Starts the CLI. Blocks until the conversation finishes.
      *
-     * @param PropertyPath The path to the CLI properties file
+     * @param propertyPath - The path to the CLI properties file
+     * @throws CliException - The CLI is already started; or the properties could
+     *                      not be loaded from given properties path
      */
     public void start(String propertyPath) throws CliException {
 
@@ -57,13 +56,24 @@ public final class Cli {
 
     /**
      * Stops the CLI. Releases CLI all resources.
+     *
+     * @throws NullPointerException - The CLI was not started
      */
-    public void stop() {
+    public void stop() throws NullPointerException {
+	if (scanner == null) {
+	    throw new NullPointerException("The scanner is not running");
+	}
 	scanner.close();
 	INSTANCE = null;
 	System.out.println("The instance is now Closed !");
     }
 
+    /**
+     * Load the properties of the given file
+     *
+     * @param propertyPath
+     * @throws IOException
+     */
     private void loadProperties(String propertyPath) throws IOException {
 	InputStream input = null;
 
@@ -71,6 +81,11 @@ public final class Cli {
 	props.load(input);
     }
 
+    /**
+     * Request the user to enter needed schedule inputs
+     *
+     * @return User input
+     */
     private String getUserInput() {
 	System.out.println(props.getProperty("cli.request"));
 	return scanner.nextLine();
