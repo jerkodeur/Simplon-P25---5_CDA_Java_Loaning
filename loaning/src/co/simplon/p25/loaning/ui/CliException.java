@@ -1,27 +1,17 @@
 package co.simplon.p25.loaning.ui;
 
-@SuppressWarnings("serial")
-public final class CliException extends Exception{
+import java.io.Serializable;
 
-	private String message;
-	private Throwable cause;
-	
-	public CliException(String message) {
-		this.message = message;
-	}
-	
-	public CliException(String message, Throwable cause) {
-		this.message = message;
-		this.cause = cause;
-	}
-	
-	
-	public String getMessage() {
-		return message;
-	}
+public final class CliException extends Exception implements Serializable {
 
-	public Throwable getCause() {
-		return cause;
-	}
-	
+    private static final long serialVersionUID = 1L;
+
+    public CliException(String message) {
+	super(message);
+    }
+
+    public CliException(String message, Throwable cause) {
+	super(message, cause);
+    }
+
 }
