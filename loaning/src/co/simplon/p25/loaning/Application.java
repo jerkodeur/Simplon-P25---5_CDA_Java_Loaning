@@ -1,5 +1,6 @@
 package co.simplon.p25.loaning;
 
+import co.simplon.p25.loaning.calculator.ScheduleMethod;
 import co.simplon.p25.loaning.ui.Cli;
 
 /**
@@ -23,6 +24,7 @@ public final class Application {
 		throw new ArrayIndexOutOfBoundsException("Properties file path is missing !");
 	    }
 	    instance.start(args[0]);
+	    ScheduleMethod.valueOf("");
 	    instance.stop();
 	} catch (Exception e) {
 	    System.err.println(e.getMessage());
