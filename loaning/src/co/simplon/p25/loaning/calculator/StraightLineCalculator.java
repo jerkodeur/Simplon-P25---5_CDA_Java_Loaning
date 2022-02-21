@@ -3,18 +3,52 @@
  */
 package co.simplon.p25.loaning.calculator;
 
+import co.simplon.p25.loaning.calculator.Payment.Builder;
+
 /**
  * The straight-line calculator concrete implementation.
  */
 public class StraightLineCalculator extends AbstractCalculator {
-    private Request request;
-
+    /**
+     * Creates a new StraightLineCalculator.
+     *
+     * @param request - the schedule request
+     * @throws NullPointerException
+     */
     public StraightLineCalculator(Request request) {
-	this.request = request;
+	super(request);
+	System.out.println(periods());
     }
 
     @Override
     public Schedule calculate() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    /**
+     * Calculates the first period (month) based on the straight-line method.
+     * Calculates the principal, interests, total paid and remaining for the period.
+     *
+     * @param builder - the payment builder
+     * @return the updated builder with calculated values
+     */
+    @Override
+    Builder firstPeriod(Builder builder) {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    /**
+     * Calculates a next period (month) based on the straight-line method.
+     * Calculates the principal, interests, total paid and remaining for the period.
+     *
+     * @param previous - the previously calculated payment
+     * @param builder  - the payment builder
+     * @return the updated builder with calculated values
+     */
+    @Override
+    Builder nextPeriod(Payment previous, Builder builder) {
 	// TODO Auto-generated method stub
 	return null;
     }

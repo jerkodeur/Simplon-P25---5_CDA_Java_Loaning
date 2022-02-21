@@ -27,11 +27,10 @@ public final class Payment {
 	private double remaining;
 
 	public Builder(double principal, double interests, double total, double remaining) {
-	    this.principal = principal;
-	    this.interests = interests;
-	    this.total = total;
-	    this.remaining = remaining;
-
+	    principal(principal);
+	    interests(interests);
+	    total(total);
+	    remaining(remaining);
 	    build();
 	}
 
@@ -48,7 +47,9 @@ public final class Payment {
 	 * @param principal
 	 * @return - this builder for chaining
 	 */
-	public Builder principal(double principal) {
+	private Builder principal(double principal) {
+
+	    this.principal = principal;
 	    return this;
 	}
 
@@ -56,7 +57,7 @@ public final class Payment {
 	 * @param interests
 	 * @return - this builder for chaining
 	 */
-	public Builder interests(double interests) {
+	private Builder interests(double interests) {
 	    return this;
 	}
 
@@ -64,7 +65,7 @@ public final class Payment {
 	 * @param total
 	 * @return - this builder for chaining
 	 */
-	public Builder total(double total) {
+	private Builder total(double total) {
 	    return this;
 	}
 
@@ -72,7 +73,7 @@ public final class Payment {
 	 * @param remaining
 	 * @return - this builder for chaining
 	 */
-	public Builder remaining(double remaining) {
+	private Builder remaining(double remaining) {
 	    return this;
 	}
 
@@ -113,7 +114,7 @@ public final class Payment {
      * @return a string representation of this payment
      */
     public String toString() {
-	// TODO Auto-generated method stub
-	return super.toString();
+	String formattedPayment = String.format("%.2f%8.2f%8.2f%8.2f", principal, interests, total, remaining);
+	return formattedPayment;
     }
 }

@@ -46,6 +46,10 @@ public final class Cli {
      *
      * Then delegates the printing of the schedule to the CliUtil class.
      *
+     * Example 1 input: a=10000 d=1 r=1.15 m=ANNUITY
+     *
+     * Example 2 input: a=10000 d=20 r=1.15 m=STRAIGHT_LINE
+     *
      * @param propertyPath - The path to the CLI properties file
      * @throws CliException - The CLI is already started; or the properties could
      *                      not be loaded from given properties path
@@ -70,7 +74,7 @@ public final class Cli {
 	ScheduleMethod method = userInputs.getUserInputs().getMethod();
 	Request request = userInputs.getUserInputs().getRequest();
 	Calculator calculator = method.calculator(request);
-	System.out.println(method.toString());
+//	System.out.println(method.toString());
 
     }
 
