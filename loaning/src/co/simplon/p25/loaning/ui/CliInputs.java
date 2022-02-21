@@ -16,7 +16,30 @@ public final class CliInputs {
     private Request request;
     private ScheduleMethod method;
 
-    private class Builder {
+    private CliInputs(Builder builder) {
+	this.request = builder.request;
+	this.method = builder.method;
+    }
+
+    /**
+     * Builds a new CliInputs
+     */
+    public static final class Builder {
+	private final Request request;
+	private final ScheduleMethod method;
+
+	/**
+	 * Initialize the builder
+	 *
+	 * @param request
+	 * @param method
+	 */
+	public Builder(ScheduleMethod method, Request request) {
+	    this.request = request;
+	    this.method = method;
+	    method(method);
+	    request(request);
+	}
 
 	/**
 	 * Builds a new CliInputs with specified request and method.
@@ -24,7 +47,7 @@ public final class CliInputs {
 	 * @return - a new CliInputs instance
 	 */
 	public CliInputs build() {
-	    return new CliInputs();
+	    return new CliInputs(this);
 	}
 
 	/**
@@ -35,16 +58,24 @@ public final class CliInputs {
 	 * @throws NullPointerException - if method is null
 	 */
 	private Builder method(ScheduleMethod method) throws NullPointerException {
+	    if (method == null) {
+		throw new NullPointerException("Error, The method is not defined !");
+	    }
+
 	    return this;
 	}
 
 	/**
+	 * Set the given request.
 	 *
 	 * @param request - a request
 	 * @return this builder for chaining
 	 * @throws NullPointerException - if payment is null
 	 */
 	private Builder request(Request request) throws NullPointerException {
+	    if (request == null) {
+		throw new NullPointerException("Error, The request is not defined !");
+	    }
 	    return this;
 	}
     }
@@ -74,7 +105,6 @@ public final class CliInputs {
      * @return string representation of this CLI inputs
      */
     public String toString() {
-	// TODO Auto-generated method stub
 	return super.toString();
     }
 

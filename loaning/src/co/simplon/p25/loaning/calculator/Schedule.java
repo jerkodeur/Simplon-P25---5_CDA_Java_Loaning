@@ -15,10 +15,30 @@ public final class Schedule {
     private double interests;
     private double total;
 
+    private Schedule(Builder builder) {
+	this.payments = builder.payments;
+	this.interests = builder.interests;
+	this.total = builder.total;
+    }
+
     /**
      * A builder to build Schedule instances.
      */
     static final class Builder {
+	private final List<Payment> payments;
+	private final double interests;
+	private final double total;
+
+	public Builder(List<Payment> payments, Payment payment, double interests, double total) {
+	    this.payments = payments;
+	    this.interests = interests;
+	    this.total = total;
+
+	    add(payment);
+	    interests(interests);
+	    total(total);
+	    build();
+	}
 
 	/**
 	 * Builds a new Schedule with specified payments, interests and total.
@@ -26,7 +46,7 @@ public final class Schedule {
 	 * @return a new Schedule instance
 	 */
 	private Schedule build() {
-	    return new Schedule();
+	    return new Schedule(this);
 	}
 
 	/**
@@ -34,7 +54,8 @@ public final class Schedule {
 	 * @return - this builder for chaining
 	 * @throws NullPointerException - if payment is null
 	 */
-	private Builder interests(Payment payment) throws NullPointerException {
+	private Builder add(Payment payment) throws NullPointerException {
+	    payments.add(payment);
 	    return this;
 	}
 

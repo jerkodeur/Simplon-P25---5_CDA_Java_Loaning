@@ -6,6 +6,10 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Scanner;
 
+import co.simplon.p25.loaning.calculator.Calculator;
+import co.simplon.p25.loaning.calculator.Request;
+import co.simplon.p25.loaning.calculator.ScheduleMethod;
+
 /**
  * A Command Line Interface backed by a Scanner. Implemented as a Singleton.
  */
@@ -30,7 +34,17 @@ public final class Cli {
     }
 
     /**
-     * Starts the CLI. Blocks until the conversation finishes.
+     * Starts the CLI. Blocks until the conversation finishes. Checks whether or not
+     * the scanner is instantiated; if so, a CliException is thrown. Then loads the
+     * CLI properties from the given path. Displays and waits for user interaction,
+     * once the user inputs the schedule request line, delegates conversion and
+     * validation to the CliUtil. In case of bad inputs, gives a retry to the user
+     * with an error message. Once a schedule request is valid, uses the
+     * ScheduleMethod fabrics to get a Calculator instance given the method
+     * specified by the user. Then invokes the calulator to calculate the requested
+     * schedule.
+     *
+     * Then delegates the printing of the schedule to the CliUtil class.
      *
      * @param propertyPath - The path to the CLI properties file
      * @throws CliException - The CLI is already started; or the properties could
@@ -47,11 +61,17 @@ public final class Cli {
 	try {
 	    loadProperties(propertyPath);
 	} catch (Exception e) {
-	    throw new CliException("Error when loading the properties file");
+	    throw new CliException("Error when loading the properties file", e);
 	}
 
 	System.out.println(props.getProperty("cli.welcome"));
-	getUserInput();
+
+	CliUtil userInputs = getUserInputs();
+	ScheduleMethod method = userInputs.getUserInputs().getMethod();
+	Request request = userInputs.getUserInputs().getRequest();
+	Calculator calculator = method.calculator(request);
+	System.out.println(method.toString());
+
     }
 
     /**
@@ -86,9 +106,17 @@ public final class Cli {
      *
      * @return User input
      */
-    private String getUserInput() {
-	System.out.println(props.getProperty("cli.request"));
-	return scanner.nextLine();
+    private CliUtil getUserInputs() {
+	while (true) {
+	    System.out.println(props.getProperty("cli.request"));
+	    String userInput = scanner.nextLine();
+	    try {
+		CliUtil userInputs = new CliUtil(userInput);
+		return userInputs;
+	    } catch (Exception e) {
+		System.err.println(String.format("%s", props.getProperty("cli.request.error")));
+	    }
+	}
     }
 
 }

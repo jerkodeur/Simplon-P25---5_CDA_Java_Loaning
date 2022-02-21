@@ -10,7 +10,7 @@ public enum ScheduleMethod {
     STRAIGHT_LINE {
 	@Override
 	public StraightLineCalculator calculator(Request request) {
-	    return new StraightLineCalculator();
+	    return new StraightLineCalculator(request);
 	}
     },
 
@@ -18,7 +18,7 @@ public enum ScheduleMethod {
     ANNUITY {
 	@Override
 	public AnnuityCalculator calculator(Request request) {
-	    return new AnnuityCalculator(null);
+	    return new AnnuityCalculator(request);
 	}
     };
 
@@ -44,10 +44,8 @@ public enum ScheduleMethod {
      */
     public static ScheduleMethod valueOf​(String name) throws IllegalArgumentException, NullPointerException {
 	ScheduleMethod method = ScheduleMethod.valueOf(name);
-	System.out.println(method);
 
 	if (name == null) {
-	    System.out.println("test");
 	    throw new NullPointerException("No schedule method provided!");
 	} else if (method == null) {
 	    throw new IllegalArgumentException("The argument schedule method provided is not valid!");

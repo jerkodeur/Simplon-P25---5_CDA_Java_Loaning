@@ -13,7 +13,27 @@ public final class Payment {
     private double total;
     private double remaining;
 
+    private Payment(Builder builder) {
+	this.principal = builder.principal;
+	this.interests = builder.interests;
+	this.total = builder.total;
+	this.remaining = builder.remaining;
+    }
+
     static final class Builder {
+	private double principal;
+	private double interests;
+	private double total;
+	private double remaining;
+
+	public Builder(double principal, double interests, double total, double remaining) {
+	    this.principal = principal;
+	    this.interests = interests;
+	    this.total = total;
+	    this.remaining = remaining;
+
+	    build();
+	}
 
 	/**
 	 * Builds a new Payment.
@@ -21,7 +41,7 @@ public final class Payment {
 	 * @return - a new payment instance
 	 */
 	private Payment build() {
-	    return new Payment();
+	    return new Payment(this);
 	}
 
 	/**
