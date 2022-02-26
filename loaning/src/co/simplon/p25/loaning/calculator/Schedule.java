@@ -3,6 +3,7 @@
  */
 package co.simplon.p25.loaning.calculator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,33 +12,28 @@ import java.util.List;
  */
 public final class Schedule {
 
-    private List<Payment> payments;
+    private List<Payment> payments = new ArrayList<Payment>();
     private double interests;
     private double total;
 
-    private Schedule(Builder builder) {
-	this.payments = builder.payments;
-	this.interests = builder.interests;
-	this.total = builder.total;
+    /**
+     * @param builder
+     */
+    public Schedule(Builder builder) {
+	payments = builder.payments;
+	interests = builder.interests;
+	total = builder.total;
     }
 
     /**
      * A builder to build Schedule instances.
      */
     static final class Builder {
-	private final List<Payment> payments;
-	private final double interests;
-	private final double total;
+	private List<Payment> payments = new ArrayList<Payment>();
+	private double interests;
+	private double total;
 
-	public Builder(List<Payment> payments, Payment payment, double interests, double total) {
-	    this.payments = payments;
-	    this.interests = interests;
-	    this.total = total;
-
-	    add(payment);
-	    interests(interests);
-	    total(total);
-	    build();
+	Builder() {
 	}
 
 	/**
@@ -45,7 +41,7 @@ public final class Schedule {
 	 *
 	 * @return a new Schedule instance
 	 */
-	private Schedule build() {
+	Schedule build() {
 	    return new Schedule(this);
 	}
 
@@ -54,8 +50,8 @@ public final class Schedule {
 	 * @return - this builder for chaining
 	 * @throws NullPointerException - if payment is null
 	 */
-	private Builder add(Payment payment) throws NullPointerException {
-	    payments.add(payment);
+	Builder add(Payment payment) throws NullPointerException {
+	    this.payments.add(payment);
 	    return this;
 	}
 
@@ -63,7 +59,8 @@ public final class Schedule {
 	 * @param interests
 	 * @return - this builder for chaining
 	 */
-	private Builder interests(double interests) {
+	Builder interests(double interests) {
+	    this.interests += interests;
 	    return this;
 	}
 
@@ -71,18 +68,10 @@ public final class Schedule {
 	 * @param total
 	 * @return - this builder for chaining
 	 */
-	private Builder total(double total) {
+	Builder total(double total) {
+	    this.total += total;
 	    return this;
 	}
-    }
-
-    /**
-     * Returns the total interests for this schedule.
-     *
-     * @return - the total interests
-     */
-    public double getInterests() {
-	return interests;
     }
 
     /**
@@ -92,6 +81,16 @@ public final class Schedule {
      */
     public List<Payment> getPayments() {
 	return payments;
+    }
+
+    /**
+     * Returns the total interests for this schedule.
+     *
+     * @return - the total interests
+     */
+
+    public double getInterests() {
+	return interests;
     }
 
     /**

@@ -9,9 +9,9 @@ package co.simplon.p25.loaning.calculator;
  *
  */
 public abstract class AbstractCalculator implements Calculator {
-    private double amount;
-    private double rate;
-    private int periods;
+    protected double amount;
+    protected double rate;
+    protected int periods;
 
     /**
      * Creates a new AbstractCalculator.
@@ -56,7 +56,7 @@ public abstract class AbstractCalculator implements Calculator {
      * @return the percent rate as a decimal
      */
     protected final double decimalPeriodicRate() {
-	return rate;
+	return Double.valueOf(rate / periods);
     }
 
     /**
@@ -70,13 +70,12 @@ public abstract class AbstractCalculator implements Calculator {
     }
 
     /**
-     * Calculates the first period (month) based on the annuity method. Calculates
-     * the principal, interests, total paid and remaining for the period.
+     * Calculates the first period (month) of the schedule.
      *
      * @param builder - a payment builder to set calculated payment values
      * @return the updated builder itself
      */
-    abstract Payment.Builder firstPeriod(Payment.Builder builder);
+    protected abstract Payment.Builder firstPeriod(Payment.Builder builder);
 
     /**
      * Calculates the next period(s) (month-s) of the schedule.
@@ -85,5 +84,5 @@ public abstract class AbstractCalculator implements Calculator {
      * @param builder  - a payment builder to set calculated payment values
      * @return the updated builder with calculated values
      */
-    abstract Payment.Builder nextPeriod(Payment previous, Payment.Builder builder);
+    protected abstract Payment.Builder nextPeriod(Payment previous, Payment.Builder builder);
 }

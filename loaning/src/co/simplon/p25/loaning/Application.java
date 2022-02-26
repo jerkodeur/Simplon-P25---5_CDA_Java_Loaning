@@ -1,5 +1,7 @@
 package co.simplon.p25.loaning;
 
+import java.util.Locale;
+
 import co.simplon.p25.loaning.ui.Cli;
 
 /**
@@ -16,7 +18,7 @@ public final class Application {
      * @param args - the application arguments
      */
     public static void main(String[] args) {
-
+	Locale.setDefault(Locale.US);
 	try {
 	    Cli instance = Cli.getInstance();
 	    if (args.length == 0) {

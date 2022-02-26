@@ -3,12 +3,14 @@
  */
 package co.simplon.p25.loaning.calculator;
 
-import co.simplon.p25.loaning.calculator.Payment.Builder;
-
 /**
  * The straight-line calculator concrete implementation.
  */
 public class StraightLineCalculator extends AbstractCalculator {
+    private final double principal;
+    private double interests;
+    private double remaining;
+
     /**
      * Creates a new StraightLineCalculator.
      *
@@ -17,12 +19,39 @@ public class StraightLineCalculator extends AbstractCalculator {
      */
     public StraightLineCalculator(Request request) {
 	super(request);
-	System.out.println(periods());
+	principal = Double.valueOf(amount / periods);
+	remaining = amount;
     }
 
+    /**
+     * Example 2 input: a=100000 d=1 r=1.2 m=STRAIGHT_LINE
+     */
     @Override
     public Schedule calculate() {
-	// TODO Auto-generated method stub
+	// Invoking firstPeriod(Builder) once
+	Payment.Builder firstPayment = new Payment.Builder();
+	Payment firstPeriod = firstPeriod(firstPayment).build();
+	System.out.println("First period");
+	System.out.println(firstPayment.build().toString());
+	// Initialize a new Schedule instance
+	Schedule schedule = new Schedule.Builder().add(firstPeriod).interests(firstPeriod.getInterests())
+		.total(firstPeriod.getTotal()).build();
+	System.out.println("Payments");
+	System.out.println(schedule.getPayments());
+	// Invoking nextPeriod(Payment, Builder) method as many times as there are
+	// remaining periods in order.
+	int boucle = 0;
+	while (remaining() - principal > 0) {
+	    boucle++;
+	    if (remaining > principal) {
+		remaining -= principal;
+	    }
+	    System.out.println(boucle + " " + remaining);
+	    // invoking nextPeriod
+//	    Payment nextPeriod = new Payment();
+//	    Schedule.Builder sch =  new Schedule.Builder()
+//	    schedule.Builder.add(secondPeriod);
+	}
 	return null;
     }
 
@@ -34,9 +63,10 @@ public class StraightLineCalculator extends AbstractCalculator {
      * @return the updated builder with calculated values
      */
     @Override
-    Builder firstPeriod(Builder builder) {
-	// TODO Auto-generated method stub
-	return null;
+    protected Payment.Builder firstPeriod(Payment.Builder builder) {
+	setInterest(amount);
+	remaining();
+	return builder.interests(interests).principal(principal).remaining(remaining()).total(total());
     }
 
     /**
@@ -48,9 +78,21 @@ public class StraightLineCalculator extends AbstractCalculator {
      * @return the updated builder with calculated values
      */
     @Override
-    Builder nextPeriod(Payment previous, Builder builder) {
+    protected Payment.Builder nextPeriod(Payment previous, Payment.Builder builder) {
 	// TODO Auto-generated method stub
 	return null;
+    }
+
+    protected void setInterest(double amount) {
+	interests = amount * (decimalPeriodicRate() / 100);
+    }
+
+    private double total() {
+	return principal + interests;
+    }
+
+    private double remaining() {
+	return remaining - principal;
     }
 
 }

@@ -36,7 +36,7 @@ public final class AnnuityCalculator extends AbstractCalculator {
      * @return the updated builder with calculated values
      */
     @Override
-    Builder firstPeriod(Builder builder) {
+    public Builder firstPeriod(Builder builder) {
 	// TODO Auto-generated method stub
 	return null;
     }
@@ -50,7 +50,7 @@ public final class AnnuityCalculator extends AbstractCalculator {
      * @return the updated builder with calculated values
      */
     @Override
-    Builder nextPeriod(Payment previous, Builder builder) {
+    public Builder nextPeriod(Payment previous, Builder builder) {
 	// TODO Auto-generated method stub
 	return null;
     }

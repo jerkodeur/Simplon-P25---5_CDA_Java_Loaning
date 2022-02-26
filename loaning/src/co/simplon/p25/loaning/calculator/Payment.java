@@ -13,11 +13,14 @@ public final class Payment {
     private double total;
     private double remaining;
 
-    private Payment(Builder builder) {
-	this.principal = builder.principal;
-	this.interests = builder.interests;
-	this.total = builder.total;
-	this.remaining = builder.remaining;
+    /**
+     * @param builder
+     */
+    public Payment(Builder builder) {
+	principal = builder.principal;
+	interests = builder.interests;
+	total = builder.total;
+	remaining = builder.remaining;
     }
 
     static final class Builder {
@@ -26,29 +29,14 @@ public final class Payment {
 	private double total;
 	private double remaining;
 
-	public Builder(double principal, double interests, double total, double remaining) {
-	    principal(principal);
-	    interests(interests);
-	    total(total);
-	    remaining(remaining);
-	    build();
-	}
-
-	/**
-	 * Builds a new Payment.
-	 *
-	 * @return - a new payment instance
-	 */
-	private Payment build() {
-	    return new Payment(this);
+	Builder() {
 	}
 
 	/**
 	 * @param principal
 	 * @return - this builder for chaining
 	 */
-	private Builder principal(double principal) {
-
+	Payment.Builder principal(double principal) {
 	    this.principal = principal;
 	    return this;
 	}
@@ -57,7 +45,8 @@ public final class Payment {
 	 * @param interests
 	 * @return - this builder for chaining
 	 */
-	private Builder interests(double interests) {
+	Payment.Builder interests(double interests) {
+	    this.interests = interests;
 	    return this;
 	}
 
@@ -65,7 +54,8 @@ public final class Payment {
 	 * @param total
 	 * @return - this builder for chaining
 	 */
-	private Builder total(double total) {
+	Payment.Builder total(double total) {
+	    this.total = total;
 	    return this;
 	}
 
@@ -73,8 +63,18 @@ public final class Payment {
 	 * @param remaining
 	 * @return - this builder for chaining
 	 */
-	private Builder remaining(double remaining) {
+	Payment.Builder remaining(double remaining) {
+	    this.remaining = remaining;
 	    return this;
+	}
+
+	/**
+	 * Builds a new Payment.
+	 *
+	 * @return - a new payment instance
+	 */
+	Payment build() {
+	    return new Payment(this);
 	}
 
     }
@@ -114,7 +114,7 @@ public final class Payment {
      * @return a string representation of this payment
      */
     public String toString() {
-	String formattedPayment = String.format("%.2f%8.2f%8.2f%8.2f", principal, interests, total, remaining);
+	String formattedPayment = String.format("%,.2f%,15.2f%,15.2f%,15.2f", principal, interests, total, remaining);
 	return formattedPayment;
     }
 }
