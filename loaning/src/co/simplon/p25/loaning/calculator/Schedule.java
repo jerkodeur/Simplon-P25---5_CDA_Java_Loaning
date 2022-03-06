@@ -12,7 +12,7 @@ import java.util.List;
  */
 public final class Schedule {
 
-    private List<Payment> payments = new ArrayList<Payment>();
+    private final List<Payment> payments;
     private double interests;
     private double total;
 
@@ -29,7 +29,7 @@ public final class Schedule {
      * A builder to build Schedule instances.
      */
     static final class Builder {
-	private List<Payment> payments = new ArrayList<Payment>();
+	private final List<Payment> payments = new ArrayList<Payment>();
 	private double interests;
 	private double total;
 

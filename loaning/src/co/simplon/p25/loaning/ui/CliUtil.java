@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import co.simplon.p25.loaning.calculator.Payment;
 import co.simplon.p25.loaning.calculator.Request;
 import co.simplon.p25.loaning.calculator.Schedule;
 import co.simplon.p25.loaning.calculator.ScheduleMethod;
@@ -17,16 +18,12 @@ import co.simplon.p25.loaning.calculator.ScheduleMethod;
  * CliInputs instance, and a method to print the Schedule.
  *
  */
-public final class CliUtil {
-    private CliInputs userInputs;
-
-    /**
-     * @param userInput
-     * @throws CliException
-     */
-    public CliUtil(String userInput) throws CliException {
-	userInputs = toCliInputs(userInput);
-    }
+final class CliUtil {
+//    private Schedule schedule;
+//
+//    public void setSchedule(Schedule schedule) {
+//	this.schedule = schedule;
+//    }
 
     /**
      * Converts and validates the schedule request inputs. The request inputs are
@@ -44,7 +41,7 @@ public final class CliUtil {
      *                            expected pattern; or if any validation rule is
      *                            violated
      */
-    private static CliInputs toCliInputs(String inputLine) throws CliException {
+    static CliInputs toCliInputs(String inputLine) throws CliException {
 
 	Matcher matcher = splitUserInput(inputLine);
 
@@ -125,17 +122,36 @@ public final class CliUtil {
      * @param schedule   - the amortization schedule to print
      * @throws NullPointerException - if any of the argument is null
      */
-    private static void printSchedule​(Properties properties, Schedule schedule) {
-	// Print the amortization schedule
+    static void printSchedule​(Properties properties, Schedule schedule) throws NullPointerException {
+	if (properties == null) {
+	    throw new NullPointerException("Properties are not defined !");
+	} else if (schedule == null) {
+	    throw new NullPointerException("schedule can not be null !");
+	}
+	printScheduleHeader(properties);
+	for (int period = 0; period < schedule.getPayments().size(); period++) {
+	    Payment payment = schedule.getPayments().get(period);
+	    String formatPayment = String.format("%-10d%,-20.2f%,-20.2f%,-20.2f%,.2f", period + 1,
+		    payment.getPrincipal(), payment.getInterests(), payment.getTotal(), payment.getRemaining());
+	    System.out.println(formatPayment);
+	}
+	printScheduleFooter(schedule);
     }
 
-    /**
-     * Return the validate and convert user input
-     *
-     * @return a new CliInputs instance
-     */
-    public CliInputs getUserInputs() {
-	return userInputs;
+    static private void printScheduleHeader(Properties properties) {
+	String period = properties.getProperty("cli.period.period");
+	String principal = properties.getProperty("cli.period.principal");
+	String interest = properties.getProperty("cli.period.interest");
+	String total = properties.getProperty("cli.period.total");
+	String remaining = properties.getProperty("cli.period.remaining");
+
+	String formatOuput = String.format("%-10s%-20s%-20s%-20s%s", period, principal, interest, total, remaining);
+	System.out.println(formatOuput);
+    }
+
+    static private void printScheduleFooter(Schedule schedule) {
+	System.out.println(
+		String.format("%-10s%-20s%,-20.2f%,-20.2f", " ", " ", schedule.getInterests(), schedule.getTotal()));
     }
 
 }

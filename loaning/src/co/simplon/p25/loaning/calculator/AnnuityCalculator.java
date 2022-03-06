@@ -10,6 +10,7 @@ import co.simplon.p25.loaning.calculator.Payment.Builder;
  *
  */
 public final class AnnuityCalculator extends AbstractCalculator {
+    private final double total;
 
     /**
      * Creates a new AnnuityCalculator.
@@ -19,13 +20,39 @@ public final class AnnuityCalculator extends AbstractCalculator {
      */
     public AnnuityCalculator(Request request) {
 	super(request);
-	System.out.println(periods());
+	remaining = amount;
+	total = getCalculateTotal();
+	setInterests(remaining);
+	setPrincipal();
     }
 
     @Override
     public Schedule calculate() {
-	// TODO Auto-generated method stub
-	return null;
+	// Invoking firstPeriod(Builder) once
+	Payment.Builder paymentBuilder = new Payment.Builder();
+	Payment payment = firstPeriod(paymentBuilder).build();
+	// Initialize a new Schedule instance with the first period
+	Schedule.Builder builder = new Schedule.Builder().add(payment).interests(interests).total(total);
+	// Add each next period to the schedule instance
+	while (remaining - principal > 0) {
+	    Payment.Builder nextPaymentBuilder = new Payment.Builder();
+	    Payment nextPayment = nextPeriod(payment, nextPaymentBuilder).build();
+	    builder.add(nextPayment).interests(nextPayment.getInterests()).total(nextPayment.getTotal());
+
+	    payment = nextPayment;
+	}
+
+	return builder.build();
+    }
+
+    private void setPrincipal() {
+	principal = total - interests;
+    }
+
+    protected double getCalculateTotal() {
+	double percentRate = decimalPeriodicRate() / 100;
+	return remaining
+		* (percentRate * (Math.pow(1 + percentRate, periods) / (Math.pow(1 + percentRate, periods) - 1)));
     }
 
     /**
@@ -37,8 +64,8 @@ public final class AnnuityCalculator extends AbstractCalculator {
      */
     @Override
     public Builder firstPeriod(Builder builder) {
-	// TODO Auto-generated method stub
-	return null;
+	setRemaining(remaining);
+	return builder.interests(interests).principal(principal).remaining(remaining).total(total);
     }
 
     /**
@@ -51,8 +78,11 @@ public final class AnnuityCalculator extends AbstractCalculator {
      */
     @Override
     public Builder nextPeriod(Payment previous, Builder builder) {
-	// TODO Auto-generated method stub
-	return null;
+	setInterests(previous.getRemaining());
+	setPrincipal();
+	setRemaining(previous.getRemaining());
+
+	return builder.interests(interests).principal(principal).remaining(remaining).total(total);
     }
 
 }

@@ -7,9 +7,7 @@ package co.simplon.p25.loaning.calculator;
  * The straight-line calculator concrete implementation.
  */
 public class StraightLineCalculator extends AbstractCalculator {
-    private final double principal;
-    private double interests;
-    private double remaining;
+    private double total;
 
     /**
      * Creates a new StraightLineCalculator.
@@ -20,39 +18,28 @@ public class StraightLineCalculator extends AbstractCalculator {
     public StraightLineCalculator(Request request) {
 	super(request);
 	principal = Double.valueOf(amount / periods);
-	remaining = amount;
+	setInterests(amount);
+	setRemaining(amount);
+	setTotal();
     }
 
-    /**
-     * Example 2 input: a=100000 d=1 r=1.2 m=STRAIGHT_LINE
-     */
     @Override
     public Schedule calculate() {
 	// Invoking firstPeriod(Builder) once
-	Payment.Builder firstPayment = new Payment.Builder();
-	Payment firstPeriod = firstPeriod(firstPayment).build();
-	System.out.println("First period");
-	System.out.println(firstPayment.build().toString());
-	// Initialize a new Schedule instance
-	Schedule schedule = new Schedule.Builder().add(firstPeriod).interests(firstPeriod.getInterests())
-		.total(firstPeriod.getTotal()).build();
-	System.out.println("Payments");
-	System.out.println(schedule.getPayments());
-	// Invoking nextPeriod(Payment, Builder) method as many times as there are
-	// remaining periods in order.
-	int boucle = 0;
-	while (remaining() - principal > 0) {
-	    boucle++;
-	    if (remaining > principal) {
-		remaining -= principal;
-	    }
-	    System.out.println(boucle + " " + remaining);
-	    // invoking nextPeriod
-//	    Payment nextPeriod = new Payment();
-//	    Schedule.Builder sch =  new Schedule.Builder()
-//	    schedule.Builder.add(secondPeriod);
+	Payment.Builder paymentBuilder = new Payment.Builder();
+	Payment payment = firstPeriod(paymentBuilder).build();
+	// Initialize a new Schedule instance with the first period
+	Schedule.Builder builder = new Schedule.Builder().add(payment).interests(interests).total(total);
+	// Add each next period to the schedule instance
+	while (remaining - principal > 0) {
+	    Payment.Builder nextPaymentBuilder = new Payment.Builder();
+	    Payment nextPayment = nextPeriod(payment, nextPaymentBuilder).build();
+	    builder.add(nextPayment).interests(nextPayment.getInterests()).total(nextPayment.getTotal());
+
+	    payment = nextPayment;
 	}
-	return null;
+
+	return builder.build();
     }
 
     /**
@@ -64,9 +51,7 @@ public class StraightLineCalculator extends AbstractCalculator {
      */
     @Override
     protected Payment.Builder firstPeriod(Payment.Builder builder) {
-	setInterest(amount);
-	remaining();
-	return builder.interests(interests).principal(principal).remaining(remaining()).total(total());
+	return builder.interests(interests).principal(principal).remaining(remaining).total(total);
     }
 
     /**
@@ -79,20 +64,15 @@ public class StraightLineCalculator extends AbstractCalculator {
      */
     @Override
     protected Payment.Builder nextPeriod(Payment previous, Payment.Builder builder) {
-	// TODO Auto-generated method stub
-	return null;
+	setInterests(previous.getRemaining());
+	setRemaining(previous.getRemaining());
+	setTotal();
+
+	return builder.interests(interests).principal(principal).remaining(remaining).total(total);
     }
 
-    protected void setInterest(double amount) {
-	interests = amount * (decimalPeriodicRate() / 100);
-    }
-
-    private double total() {
-	return principal + interests;
-    }
-
-    private double remaining() {
-	return remaining - principal;
+    protected void setTotal() {
+	total = principal + interests;
     }
 
 }

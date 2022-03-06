@@ -12,6 +12,9 @@ public abstract class AbstractCalculator implements Calculator {
     protected double amount;
     protected double rate;
     protected int periods;
+    protected double remaining;
+    protected double interests;
+    protected double principal;
 
     /**
      * Creates a new AbstractCalculator.
@@ -50,6 +53,16 @@ public abstract class AbstractCalculator implements Calculator {
     }
 
     /**
+     * Utility method for sub-classes returning the requested number of periods in
+     * months
+     *
+     * @return the number of periods in months
+     */
+    protected final int periods() {
+	return periods;
+    }
+
+    /**
      * Utility method for sub-classes returning the periodic (monthly) percent
      * annual rate converted to a decimal.
      *
@@ -59,14 +72,12 @@ public abstract class AbstractCalculator implements Calculator {
 	return Double.valueOf(rate / periods);
     }
 
-    /**
-     * Utility method for sub-classes returning the requested number of periods in
-     * months
-     *
-     * @return the number of periods in months
-     */
-    protected final int periods() {
-	return periods;
+    protected final void setInterests(double amount) {
+	interests = amount * decimalPeriodicRate() / 100;
+    }
+
+    protected final void setRemaining(double amount) {
+	remaining = amount - principal;
     }
 
     /**

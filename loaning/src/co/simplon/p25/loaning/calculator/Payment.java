@@ -114,7 +114,6 @@ public final class Payment {
      * @return a string representation of this payment
      */
     public String toString() {
-	String formattedPayment = String.format("%,.2f%,15.2f%,15.2f%,15.2f", principal, interests, total, remaining);
-	return formattedPayment;
+	return String.format("%,.2f%,15.2f%,15.2f%,15.2f", principal, interests, total, remaining);
     }
 }

@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import co.simplon.p25.loaning.calculator.Calculator;
 import co.simplon.p25.loaning.calculator.Request;
+import co.simplon.p25.loaning.calculator.Schedule;
 import co.simplon.p25.loaning.calculator.ScheduleMethod;
 
 /**
@@ -70,13 +71,12 @@ public final class Cli {
 
 	System.out.println(props.getProperty("cli.welcome"));
 
-	CliUtil userInputs = getUserInputs();
-	ScheduleMethod method = userInputs.getUserInputs().getMethod();
-	Request request = userInputs.getUserInputs().getRequest();
+	CliInputs cliInputs = getUserInputs();
+	ScheduleMethod method = cliInputs.getMethod();
+	Request request = cliInputs.getRequest();
 	Calculator calculator = method.calculator(request);
-	calculator.calculate();
-
-//	System.out.println(method.toString());
+	Schedule schedule = calculator.calculate();
+	CliUtil.printSchedule​(props, schedule);
 
     }
 
@@ -91,7 +91,6 @@ public final class Cli {
 	}
 	scanner.close();
 	INSTANCE = null;
-	System.out.println("The instance is now Closed !");
     }
 
     /**
@@ -112,13 +111,12 @@ public final class Cli {
      *
      * @return User input
      */
-    private CliUtil getUserInputs() {
+    private CliInputs getUserInputs() {
 	while (true) {
 	    System.out.println(props.getProperty("cli.request"));
 	    String userInput = scanner.nextLine();
 	    try {
-		CliUtil userInputs = new CliUtil(userInput);
-		return userInputs;
+		return CliUtil.toCliInputs(userInput);
 	    } catch (Exception e) {
 		System.err.println(String.format("%s", props.getProperty("cli.request.error")));
 	    }
