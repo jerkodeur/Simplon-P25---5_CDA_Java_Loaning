@@ -19,11 +19,6 @@ import co.simplon.p25.loaning.calculator.ScheduleMethod;
  *
  */
 final class CliUtil {
-//    private Schedule schedule;
-//
-//    public void setSchedule(Schedule schedule) {
-//	this.schedule = schedule;
-//    }
 
     /**
      * Converts and validates the schedule request inputs. The request inputs are
@@ -41,11 +36,9 @@ final class CliUtil {
      *                            expected pattern; or if any validation rule is
      *                            violated
      */
-    static CliInputs toCliInputs(String inputLine) throws CliException {
-
-	Matcher matcher = splitUserInput(inputLine);
-
+    static CliInputs toCliInputs(String inputLine) throws CliInputsException {
 	try {
+	    Matcher matcher = splitUserInput(inputLine);
 	    matcher.find();
 	    double amount = validateAmount(matcher.group(1));
 	    int duration = validateDuration(matcher.group(2));
@@ -53,11 +46,18 @@ final class CliUtil {
 	    Request request = new Request.Builder(amount, duration, rate).build();
 	    ScheduleMethod method = ScheduleMethod.valueOf​(matcher.group(4));
 	    return new CliInputs.Builder(method, request).build();
-	} catch (CliException e) {
-	    throw new CliException("Invalid input user");
+	} catch (Exception e) {
+	    throw new CliInputsException();
 	}
     }
 
+    /**
+     * Split the user input from the regular expression representing the expected
+     * pattern
+     *
+     * @param userInput
+     * @return A new matcher for the expected pattern
+     */
     private static Matcher splitUserInput(String userInput) {
 	String regexExpression = "a=(\\d{3,7})\\sd=(\\d{1,2})\\sr=([\\d]{1,2}|[\\d]{1,2}\\.[\\d]{1,2})\\sm=(ANNUITY|STRAIGHT_LINE)";
 
@@ -72,10 +72,10 @@ final class CliUtil {
      * @return convert user amount input
      * @throws CliException - Bad format for the amount
      */
-    private static double validateAmount(String userAmount) throws CliException {
-	double convertUserInput = Double.parseDouble(userAmount);
+    private static double validateAmount(String userAmount) throws CliInputsException {
+	double convertUserInput = Double.valueOf(userAmount);
 	if (convertUserInput < 100 || convertUserInput > 1000000) {
-	    throw new CliException("Invalid input user");
+	    throw new CliInputsException();
 	}
 	return convertUserInput;
     }
@@ -87,10 +87,10 @@ final class CliUtil {
      * @return convert user duration input
      * @throws CliException - Bad format for the duration
      */
-    private static int validateDuration(String userDuration) throws CliException {
-	int convertUserInput = Integer.parseInt(userDuration);
+    private static int validateDuration(String userDuration) throws CliInputsException {
+	int convertUserInput = Integer.valueOf(userDuration);
 	if (convertUserInput < 1 || convertUserInput > 30) {
-	    throw new CliException("Invalid input user");
+	    throw new CliInputsException();
 	}
 	return convertUserInput;
     }
@@ -102,10 +102,10 @@ final class CliUtil {
      * @return convert user rate input
      * @throws CliException - Bad format for the rate
      */
-    private static double validateRate(String userRate) throws CliException {
-	double convertUserInput = Double.parseDouble(userRate);
+    private static double validateRate(String userRate) throws CliInputsException {
+	double convertUserInput = Double.valueOf(userRate);
 	if (convertUserInput < 0.05 || convertUserInput > 20) {
-	    throw new CliException("Invalid input user");
+	    throw new CliInputsException();
 	}
 	return convertUserInput;
     }
@@ -128,16 +128,25 @@ final class CliUtil {
 	} else if (schedule == null) {
 	    throw new NullPointerException("schedule can not be null !");
 	}
+
 	printScheduleHeader(properties);
+
+	// Print each schedule formatted payment on the Cli
 	for (int period = 0; period < schedule.getPayments().size(); period++) {
 	    Payment payment = schedule.getPayments().get(period);
 	    String formatPayment = String.format("%-10d%,-20.2f%,-20.2f%,-20.2f%,.2f", period + 1,
 		    payment.getPrincipal(), payment.getInterests(), payment.getTotal(), payment.getRemaining());
 	    System.out.println(formatPayment);
 	}
+
 	printScheduleFooter(schedule);
     }
 
+    /**
+     * Print the schedule header on the CLI
+     *
+     * @param properties - Application properties
+     */
     static private void printScheduleHeader(Properties properties) {
 	String period = properties.getProperty("cli.period.period");
 	String principal = properties.getProperty("cli.period.principal");
@@ -145,13 +154,19 @@ final class CliUtil {
 	String total = properties.getProperty("cli.period.total");
 	String remaining = properties.getProperty("cli.period.remaining");
 
-	String formatOuput = String.format("%-10s%-20s%-20s%-20s%s", period, principal, interest, total, remaining);
-	System.out.println(formatOuput);
+	String header = String.format("%-10s%-20s%-20s%-20s%s", period, principal, interest, total, remaining);
+	System.out.println(header);
     }
 
+    /**
+     * Print the schedule footer on the CLI
+     *
+     * @param schedule - The schedule to print
+     */
     static private void printScheduleFooter(Schedule schedule) {
-	System.out.println(
-		String.format("%-10s%-20s%,-20.2f%,-20.2f", " ", " ", schedule.getInterests(), schedule.getTotal()));
+	String footer = String.format("%-10s%-20s%,-20.2f%,-20.2f", " ", " ", schedule.getInterests(),
+		schedule.getTotal());
+	System.out.println(footer);
     }
 
 }

@@ -16,6 +16,7 @@ public final class Application {
      * present.
      *
      * @param args - the application arguments
+     * @throws ArrayIndexOutOfBoundsException - If no arguments
      */
     public static void main(String[] args) {
 	Locale.setDefault(Locale.US);
@@ -29,7 +30,9 @@ public final class Application {
 	    instance.stop();
 	} catch (Exception e) {
 	    System.err.println(e.getMessage());
-	    System.err.println(e.getCause());
+	    if (e.getCause() != null) {
+		System.err.println(e.getCause());
+	    }
 	}
     }
 
