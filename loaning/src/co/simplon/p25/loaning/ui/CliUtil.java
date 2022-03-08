@@ -14,25 +14,34 @@ import co.simplon.p25.loaning.calculator.ScheduleMethod;
 
 /**
  * An utility class with static methods to help reading and writing from/to the
- * CLI. Provides a method to convert and validate a scanned input line into a
+ * CLI.
+ * <p>
+ * Provides a method to convert and validate a scanned input line into a
  * CliInputs instance, and a method to print the Schedule.
  *
  */
 final class CliUtil {
 
     /**
-     * Converts and validates the schedule request inputs. The request inputs are
-     * expected to be specified within a single input line. The input line must
-     * match the expected pattern: - Example input: a=10000 d=1 r=1.15 m=ANNUITY -
-     * a: the amount entered as an integer value. Must be between 100 and 1000000
-     * inclusive - d: the duration entered as a decimal value. Must be between 1 and
-     * 30 inclusive - r: the rate entered as a decimal value. Must be between 0.05
-     * and 20.0 inclusive - m: the calculation method entered as a case-sensitive
-     * string. Must be one of the available ScheduleMethods
+     * Converts and validates the schedule request inputs.
+     * <p>
+     * The request inputs are expected to be specified within a single input
+     * line.<br>
+     * The input line must match the expected pattern:
+     * <li><b>Example input:</b> a=10000 d=1 r=1.15 m=ANNUITY
+     * <li><b>a:</b> the amount entered as an integer value. Must be between 100 and
+     * 1000000 inclusive
+     * <li><b>d:</b> the duration entered as a decimal value. Must be between 1 and
+     * 30 inclusive
+     * <li><b>r:</b> the rate entered as a decimal value. Must be between 0.05 and
+     * 20.0 inclusive
+     * <li><b>m:</b> the calculation method entered as a case-sensitive string. Must
+     * be one of the available ScheduleMethods
+     * </p>
      *
      * @param inputLine - the input line
      * @return a converted and validated CliInputs instance
-     * @throws CliInputsException - if the given input line does not match the
+     * @throws CliInputsException if the given input line does not match the
      *                            expected pattern; or if any validation rule is
      *                            violated
      */
@@ -53,10 +62,10 @@ final class CliUtil {
 
     /**
      * Split the user input from the regular expression representing the expected
-     * pattern
+     * pattern.
      *
      * @param userInput
-     * @return A new matcher for the expected pattern
+     * @return a new matcher for the expected pattern
      */
     private static Matcher splitUserInput(String userInput) {
 	String regexExpression = "a=(\\d{3,7})\\sd=(\\d{1,2})\\sr=([\\d]{1,2}|[\\d]{1,2}\\.[\\d]{1,2})\\sm=(ANNUITY|STRAIGHT_LINE)";
@@ -66,11 +75,11 @@ final class CliUtil {
     }
 
     /**
-     * Validate the user amount input
+     * Validate the user amount input.
      *
      * @param userAmount
-     * @return convert user amount input
-     * @throws CliException - Bad format for the amount
+     * @return the convert user amount input
+     * @throws CliInputsException if bad format for the amount
      */
     private static double validateAmount(String userAmount) throws CliInputsException {
 	double convertUserInput = Double.valueOf(userAmount);
@@ -81,11 +90,11 @@ final class CliUtil {
     }
 
     /**
-     * Validate the user duration input
+     * Validate the user duration input.
      *
      * @param userDuration
-     * @return convert user duration input
-     * @throws CliException - Bad format for the duration
+     * @return the convert user duration input
+     * @throws CliInputsException - if bad format for the duration
      */
     private static int validateDuration(String userDuration) throws CliInputsException {
 	int convertUserInput = Integer.valueOf(userDuration);
@@ -96,11 +105,11 @@ final class CliUtil {
     }
 
     /**
-     * Validate the user rate input
+     * Validate the user rate input.
      *
      * @param userRate
-     * @return convert user rate input
-     * @throws CliException - Bad format for the rate
+     * @return the convert user rate input
+     * @throws CliInputsException if bad format for the rate
      */
     private static double validateRate(String userRate) throws CliInputsException {
 	double convertUserInput = Double.valueOf(userRate);
@@ -112,15 +121,17 @@ final class CliUtil {
 
     /**
      * Prints the given schedule with the help of specified CLI properties.
-     *
+     * <p>
      * Prints a header line with the labels provided by the properties file (period,
-     * principal, interest, total and remaining). Then prints all the payment
-     * periods, providing itself a period number from 1 to n. Finally prints the
-     * footer with the total interests and total paid of the schedule.
+     * principal, interest, total and remaining). <br>
+     * Then prints all the payment periods, providing itself a period number from 1
+     * to n. <br>
+     * Finally prints the footer with the total interests and total paid of the
+     * schedule.
      *
      * @param properties - the CLI properties
      * @param schedule   - the amortization schedule to print
-     * @throws NullPointerException - if any of the argument is null
+     * @throws NullPointerException if any of the argument is null
      */
     static void printSchedule​(Properties properties, Schedule schedule) throws NullPointerException {
 	if (properties == null) {
@@ -143,9 +154,9 @@ final class CliUtil {
     }
 
     /**
-     * Print the schedule header on the CLI
+     * Print the schedule header on the CLI.
      *
-     * @param properties - Application properties
+     * @param properties - the application properties
      */
     static private void printScheduleHeader(Properties properties) {
 	String period = properties.getProperty("cli.period.period");
@@ -159,7 +170,7 @@ final class CliUtil {
     }
 
     /**
-     * Print the schedule footer on the CLI
+     * Print the schedule footer on the CLI.
      *
      * @param schedule - The schedule to print
      */

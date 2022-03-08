@@ -6,7 +6,9 @@ package co.simplon.p25.loaning.calculator;
  */
 public enum ScheduleMethod {
 
-    @SuppressWarnings("javadoc")
+    /**
+     * Straight-line method.
+     */
     STRAIGHT_LINE {
 	@Override
 	public StraightLineCalculator calculator(Request request) {
@@ -14,7 +16,9 @@ public enum ScheduleMethod {
 	}
     },
 
-    @SuppressWarnings("javadoc")
+    /**
+     * Annuity method.
+     */
     ANNUITY {
 	@Override
 	public AnnuityCalculator calculator(Request request) {
@@ -23,24 +27,16 @@ public enum ScheduleMethod {
     };
 
     /**
-     * Fabric method returning an instance of the calculator for this calculation
-     * method.
-     *
-     * @param request - the schedule request
-     * @return the calculator instance for this calculation method
-     */
-    public abstract Calculator calculator(Request request);
-
-    /**
-     * Returns the enum constant of this type with the specified name. The string
-     * must match exactly an identifier used to declare an enum constant in this
-     * type. (Extraneous whitespace characters are not permitted.)
+     * Returns the enum constant of this type with the specified name.
+     * <p>
+     * The string must match exactly an identifier used to declare an enum constant
+     * in this type(Extraneous whitespace characters are not permitted).
      *
      * @param name - the name of the enum constant to be returned.
      * @return the enum constant with the specified name
-     * @throws IllegalArgumentException - if this enum type has no constant with the
+     * @throws IllegalArgumentException if this enum type has no constant with the
      *                                  specified name
-     * @throws NullPointerException     - if the argument is null
+     * @throws NullPointerException     if the argument is null
      */
     public static ScheduleMethod valueOf​(String name) throws IllegalArgumentException, NullPointerException {
 	ScheduleMethod method = ScheduleMethod.valueOf(name);
@@ -53,4 +49,13 @@ public enum ScheduleMethod {
 
 	return method;
     }
+
+    /**
+     * Fabric method returning an instance of the calculator for this calculation
+     * method.
+     *
+     * @param request - the schedule request
+     * @return the calculator instance for this calculation method
+     */
+    public abstract Calculator calculator(Request request);
 }

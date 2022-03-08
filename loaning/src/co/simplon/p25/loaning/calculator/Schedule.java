@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents an amortization schedule. Provides a builder in order to help
- * constructing immutable instances.
+ * Represents an amortization schedule.
+ *
+ * Provides a builder in order to help constructing immutable instances.
  */
 public final class Schedule {
 
@@ -19,10 +20,37 @@ public final class Schedule {
     /**
      * @param builder
      */
-    public Schedule(Builder builder) {
+    Schedule(Builder builder) {
 	payments = builder.payments;
 	interests = builder.interests;
 	total = builder.total;
+    }
+
+    /**
+     * Returns an unmodifiable view of the payments.
+     *
+     * @return the payments; never null
+     */
+    public List<Payment> getPayments() {
+	return payments;
+    }
+
+    /**
+     * Returns the total interests for this schedule.
+     *
+     * @return the total interests
+     */
+    public double getInterests() {
+	return interests;
+    }
+
+    /**
+     * Returns the total paid for this schedule.
+     *
+     * @return the total paid
+     */
+    public double getTotal() {
+	return total;
     }
 
     /**
@@ -32,9 +60,6 @@ public final class Schedule {
 	private final List<Payment> payments = new ArrayList<Payment>();
 	private double interests;
 	private double total;
-
-	Builder() {
-	}
 
 	/**
 	 * Builds a new Schedule with specified payments, interests and total.
@@ -46,9 +71,11 @@ public final class Schedule {
 	}
 
 	/**
+	 * Adds the given payment to this schedule.
+	 *
 	 * @param payment - a payment to add
-	 * @return - this builder for chaining
-	 * @throws NullPointerException - if payment is null
+	 * @return this builder for chaining
+	 * @throws NullPointerException if payment is null
 	 */
 	Builder add(Payment payment) throws NullPointerException {
 	    this.payments.add(payment);
@@ -57,7 +84,7 @@ public final class Schedule {
 
 	/**
 	 * @param interests
-	 * @return - this builder for chaining
+	 * @return this builder for chaining
 	 */
 	Builder interests(double interests) {
 	    this.interests += interests;
@@ -66,7 +93,7 @@ public final class Schedule {
 
 	/**
 	 * @param total
-	 * @return - this builder for chaining
+	 * @return this builder for chaining
 	 */
 	Builder total(double total) {
 	    this.total += total;
@@ -74,44 +101,16 @@ public final class Schedule {
 	}
     }
 
-    /**
-     * Returns an unmodifiable view of the payments.
-     *
-     * @return - the total interests
-     */
-    public List<Payment> getPayments() {
-	return payments;
-    }
-
-    /**
-     * Returns the total interests for this schedule.
-     *
-     * @return - the total interests
-     */
-
-    public double getInterests() {
-	return interests;
-    }
-
-    /**
-     * Returns the total paid for this schedule.
-     *
-     * @return - the total interests
-     */
-    public double getTotal() {
-	return total;
-    }
-
     @Override
     /**
-     * Returns a complete string representation of this schedule. Please note that
-     * the backed List of payments toString method is not chained; instead this
-     * implementation prints the size of the list.
+     * Returns a complete string representation of this schedule.
+     * <p>
+     * Please note that the backed List of payments toString method is not chained;
+     * instead this implementation prints the size of the list.
      *
-     * @return - the total paid
+     * @return a string representation of this schedule
      */
     public String toString() {
-	// TODO Auto-generated method stub
-	return super.toString();
+	return String.format("Size of the list: %s", payments.size());
     }
 }

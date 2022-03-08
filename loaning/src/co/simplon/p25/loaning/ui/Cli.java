@@ -25,7 +25,7 @@ public final class Cli {
     /**
      * Returns the unique (singleton) instance of this Cli.
      *
-     * @return The unique instance
+     * @return the unique instance
      */
     public static Cli getInstance() {
 	if (INSTANCE == null) {
@@ -36,26 +36,28 @@ public final class Cli {
 
     /**
      * Starts the CLI. Blocks until the conversation finishes.
+     * <p>
+     * <ol>
+     * <li>Checks whether or not the scanner is instantiated; if so, a CliException
+     * is thrown.
+     * <li>Then loads the CLI properties from the given path.
+     * <li>Displays and waits for user interaction, once the user inputs the
+     * schedule request line, delegates conversion and validation to the
+     * CliUtil.<br>
+     * In case of bad inputs, gives a retry to the user with an error message.
+     * <li>Once a schedule request is valid, uses the ScheduleMethod fabrics to get
+     * a Calculator instance given the method specified by the user.
+     * <li>Then invokes the calulator to calculate the requested schedule.<br>
+     * <li>Then delegates the printing of the schedule to the CliUtil class.
+     * </p>
+     * </ol>
+     * <p>
+     * <ul>
+     * <li><b>ANNUITY input Example:</b> a=100000 d=1 r=1.2 m=ANNUITY
+     * <li><b>STRAIGHT_LINE input Example:</b> a=100000 d=1 r=1.2 m=STRAIGHT_LINE
      *
-     * Checks whether or not the scanner is instantiated; if so, a CliException is
-     * thrown. Then loads the CLI properties from the given path.
-     *
-     * Displays and waits for user interaction, once the user inputs the schedule
-     * request line, delegates conversion and validation to the CliUtil. In case of
-     * bad inputs, gives a retry to the user with an error message.
-     *
-     * Once a schedule request is valid, uses the ScheduleMethod fabrics to get a
-     * Calculator instance given the method specified by the user. Then invokes the
-     * calulator to calculate the requested schedule.
-     *
-     * Then delegates the printing of the schedule to the CliUtil class.
-     *
-     * Example 1 input: a=100000 d=1 r=1.2 m=ANNUITY
-     *
-     * Example 2 input: a=100000 d=1 r=1.2 m=STRAIGHT_LINE
-     *
-     * @param propertyPath - The path to the CLI properties file
-     * @throws CliException - if the CLI is already started; or the properties could
+     * @param propertyPath - the path to the CLI properties file
+     * @throws CliException if the CLI is already started; or the properties could
      *                      not be loaded from given properties path
      */
     public void start(String propertyPath) throws CliException {
@@ -83,22 +85,25 @@ public final class Cli {
     }
 
     /**
-     * Stops the CLI. Releases CLI all resources.
+     * Stops the CLI.
+     * <p>
+     * Releases CLI all resources.
      *
-     * @throws NullPointerException - The CLI was not started
+     * @throws NullPointerException if the CLI was not started
      */
     public void stop() throws NullPointerException {
 	if (scanner == null) {
 	    throw new NullPointerException("The scanner is not running");
 	}
 	scanner.close();
+	INSTANCE = null;
     }
 
     /**
-     * Load the properties of the given file
+     * Load the properties of the given file.
      *
      * @param propertyPath
-     * @throws IOException - if an error occurred when reading from the input stream
+     * @throws IOException if an error occurred when reading from the input stream
      *                     or if the properties file cannot be loaded
      */
     private void loadProperties(String propertyPath) throws IOException {
@@ -108,9 +113,9 @@ public final class Cli {
     }
 
     /**
-     * Request the user to enter the needed schedule inputs
+     * Request the user to enter the needed schedule inputs.
      *
-     * @return User inputs
+     * @return the user inputs
      */
     private CliInputs getUserInputs() {
 	while (true) {

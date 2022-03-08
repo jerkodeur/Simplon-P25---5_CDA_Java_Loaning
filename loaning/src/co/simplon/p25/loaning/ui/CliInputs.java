@@ -8,10 +8,12 @@ import co.simplon.p25.loaning.calculator.ScheduleMethod;
 
 /**
  * Represents the user converted and validated schedule request inputs from the
- * CLI. Provides a builder in order to help constructing immutable instances.
+ * CLI.
+ * <p>
+ * Provides a builder in order to help constructing immutable instances.
  *
  */
-public final class CliInputs {
+final class CliInputs {
 
     private Request request;
     private ScheduleMethod method;
@@ -22,14 +24,14 @@ public final class CliInputs {
     }
 
     /**
-     * Builds a new CliInputs
+     * A builder to build CliInputs instances.
      */
-    public static final class Builder {
+    static final class Builder {
 	private final Request request;
 	private final ScheduleMethod method;
 
 	/**
-	 * Initialize the builder
+	 * Initialize the builder.
 	 *
 	 * @param request
 	 * @param method
@@ -46,7 +48,7 @@ public final class CliInputs {
 	 *
 	 * @return - a new CliInputs instance
 	 */
-	public CliInputs build() {
+	CliInputs build() {
 	    return new CliInputs(this);
 	}
 
@@ -55,9 +57,9 @@ public final class CliInputs {
 	 *
 	 * @param method - a method
 	 * @return this builder for chaining
-	 * @throws NullPointerException - if method is null
+	 * @throws NullPointerException if method is null
 	 */
-	private Builder method(ScheduleMethod method) throws NullPointerException {
+	Builder method(ScheduleMethod method) throws NullPointerException {
 	    if (method == null) {
 		throw new NullPointerException("Error, The method is not defined !");
 	    }
@@ -70,9 +72,9 @@ public final class CliInputs {
 	 *
 	 * @param request - a request
 	 * @return this builder for chaining
-	 * @throws NullPointerException - if payment is null
+	 * @throws NullPointerException if payment is null
 	 */
-	private Builder request(Request request) throws NullPointerException {
+	Builder request(Request request) throws NullPointerException {
 	    if (request == null) {
 		throw new NullPointerException("Error, The request is not defined !");
 	    }
@@ -102,10 +104,10 @@ public final class CliInputs {
     /**
      * Returns a complete string representation of this CLI inputs.
      *
-     * @return string representation of this CLI inputs
+     * @return the string representation of this CLI inputs
      */
     public String toString() {
-	return super.toString();
+	return String.format("%s %s", request, method);
     }
 
 }

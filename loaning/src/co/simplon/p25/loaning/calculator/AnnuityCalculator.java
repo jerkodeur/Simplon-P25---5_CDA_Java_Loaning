@@ -9,75 +9,61 @@ import co.simplon.p25.loaning.calculator.Payment.Builder;
  * The annuity calculator concrete implementation.
  *
  */
-public final class AnnuityCalculator extends AbstractCalculator {
-    private final double total;
+final class AnnuityCalculator extends AbstractCalculator {
 
     /**
      * Creates a new AnnuityCalculator.
      *
      * @param request - the schedule request
-     * @throws NullPointerException
+     * @throws NullPointerException - if the request is null
      */
-    public AnnuityCalculator(Request request) {
+    AnnuityCalculator(Request request) {
 	super(request);
-	remaining = amount;
-	total = getCalculateTotal();
+	setRemaining(amount);
 	setInterests(remaining);
-	setPrincipal();
+	setTotal();
     }
 
-    @Override
-    public Schedule calculate() {
-	// Invoking firstPeriod(Builder) once
-	Payment.Builder paymentBuilder = new Payment.Builder();
-	Payment payment = firstPeriod(paymentBuilder).build();
-	// Initialize a new Schedule instance with the first period
-	Schedule.Builder builder = new Schedule.Builder().add(payment).interests(interests).total(total);
-	// Add each next period to the schedule instance
-	while (remaining - principal > 0) {
-	    Payment.Builder nextPaymentBuilder = new Payment.Builder();
-	    Payment nextPayment = nextPeriod(payment, nextPaymentBuilder).build();
-	    builder.add(nextPayment).interests(nextPayment.getInterests()).total(nextPayment.getTotal());
-
-	    payment = nextPayment;
-	}
-
-	return builder.build();
-    }
-
-    private void setPrincipal() {
+    /**
+     * Calculate and set current schedule principal.
+     */
+    final void setPrincipal() {
 	principal = total - interests;
     }
 
-    protected double getCalculateTotal() {
+    @Override
+    final void setTotal() {
 	double percentRate = decimalPeriodicRate() / 100;
-	return remaining
+	total = remaining
 		* (percentRate * (Math.pow(1 + percentRate, periods) / (Math.pow(1 + percentRate, periods) - 1)));
     }
 
     /**
-     * Calculates the first period (month) based on the annuity method. Calculates
-     * the principal, interests, total paid and remaining for the period.
+     * Calculates the first period (month) based on the annuity method.
+     * <p>
+     * Calculates the principal, interests, total paid and remaining for the period.
      *
      * @param builder - the payment builder
      * @return the updated builder with calculated values
      */
     @Override
-    public Builder firstPeriod(Builder builder) {
+    Builder firstPeriod(Payment.Builder builder) {
+	setPrincipal();
 	setRemaining(remaining);
 	return builder.interests(interests).principal(principal).remaining(remaining).total(total);
     }
 
     /**
-     * Calculates a next period (month) based on the annuity method. Calculates the
-     * principal, interests, total paid and remaining for the period.
+     * Calculates a next period (month) based on the annuity method.
+     * <p>
+     * Calculates the principal, interests, total paid and remaining for the period.
      *
      * @param previous - the previously calculated payment
      * @param builder  - the payment builder
      * @return the updated builder with calculated values
      */
     @Override
-    public Builder nextPeriod(Payment previous, Builder builder) {
+    Builder nextPeriod(Payment previous, Payment.Builder builder) {
 	setInterests(previous.getRemaining());
 	setPrincipal();
 	setRemaining(previous.getRemaining());

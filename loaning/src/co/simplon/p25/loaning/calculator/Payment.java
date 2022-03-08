@@ -4,8 +4,9 @@
 package co.simplon.p25.loaning.calculator;
 
 /**
- * Represents a periodic payment. Provides a builder in order to help
- * constructing immutable instances.
+ * Represents a periodic payment.
+ * <p>
+ * Provides a builder in order to help constructing immutable instances.
  */
 public final class Payment {
     private double principal;
@@ -14,7 +15,7 @@ public final class Payment {
     private double remaining;
 
     /**
-     * @param builder
+     * @param builder - the payment builder
      */
     public Payment(Builder builder) {
 	principal = builder.principal;
@@ -23,18 +24,18 @@ public final class Payment {
 	remaining = builder.remaining;
     }
 
+    /*
+     * A builder to build Payment instances.
+     */
     static final class Builder {
 	private double principal;
 	private double interests;
 	private double total;
 	private double remaining;
 
-	Builder() {
-	}
-
 	/**
 	 * @param principal
-	 * @return - this builder for chaining
+	 * @return this builder for chaining
 	 */
 	Payment.Builder principal(double principal) {
 	    this.principal = principal;
@@ -43,7 +44,7 @@ public final class Payment {
 
 	/**
 	 * @param interests
-	 * @return - this builder for chaining
+	 * @return this builder for chaining
 	 */
 	Payment.Builder interests(double interests) {
 	    this.interests = interests;
@@ -52,7 +53,7 @@ public final class Payment {
 
 	/**
 	 * @param total
-	 * @return - this builder for chaining
+	 * @return this builder for chaining
 	 */
 	Payment.Builder total(double total) {
 	    this.total = total;
@@ -61,7 +62,7 @@ public final class Payment {
 
 	/**
 	 * @param remaining
-	 * @return - this builder for chaining
+	 * @return this builder for chaining
 	 */
 	Payment.Builder remaining(double remaining) {
 	    this.remaining = remaining;
@@ -71,7 +72,7 @@ public final class Payment {
 	/**
 	 * Builds a new Payment.
 	 *
-	 * @return - a new payment instance
+	 * @return a new payment instance
 	 */
 	Payment build() {
 	    return new Payment(this);

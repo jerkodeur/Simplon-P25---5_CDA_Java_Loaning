@@ -4,8 +4,9 @@
 package co.simplon.p25.loaning.calculator;
 
 /**
- * Represents a schedule request. Provides a builder in order to help
- * constructing immutable instances.
+ * Represents a schedule request.
+ * <p>
+ * Provides a builder in order to help constructing immutable instances.
  */
 public final class Request {
     private double amount;
@@ -13,9 +14,7 @@ public final class Request {
     private double rate;
 
     /**
-     * Initialize the Request class
-     *
-     * @param builder
+     * @param builder - the request builder
      */
     public Request(Builder builder) {
 	amount = builder.amount;
@@ -54,10 +53,10 @@ public final class Request {
     /**
      * Returns a complete string representation of this request.
      *
-     * @return a string representation of this request
+     * @return the string representation of this request
      */
     public String toString() {
-	return super.toString();
+	return String.format("%s %s %s", amount, duration, rate);
     }
 
     /**
@@ -69,6 +68,8 @@ public final class Request {
 	private final double rate;
 
 	/**
+	 * Request builder constructor.
+	 *
 	 * @param amount
 	 * @param duration
 	 * @param rate
@@ -82,7 +83,7 @@ public final class Request {
 	/**
 	 * Builds a new Request with specified request and method.
 	 *
-	 * @return - a new Request instance
+	 * @return a new Request instance
 	 */
 	public Request build() {
 	    return new Request(this);
@@ -90,7 +91,7 @@ public final class Request {
 
 	/**
 	 * @param amount
-	 * @return - this builder for chaining
+	 * @return this builder for chaining
 	 */
 	public Builder amount(double amount) {
 	    return this;
@@ -98,7 +99,7 @@ public final class Request {
 
 	/**
 	 * @param duration
-	 * @return - this builder for chaining
+	 * @return this builder for chaining
 	 */
 	public Builder duration(int duration) {
 	    return this;
@@ -106,7 +107,7 @@ public final class Request {
 
 	/**
 	 * @param rate
-	 * @return - this builder for chaining
+	 * @return this builder for chaining
 	 */
 	public Builder rate(double rate) {
 	    return this;

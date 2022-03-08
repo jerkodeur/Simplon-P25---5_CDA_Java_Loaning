@@ -13,5 +13,5 @@ public interface Calculator {
      *
      * @return a schedule; never null
      */
-    public abstract Schedule calculate();
+    Schedule calculate();
 }

@@ -16,6 +16,7 @@ public final class CliInputsException extends Exception implements Serializable 
      * Creates a new CliInputsException.
      */
     public CliInputsException() {
+	super();
     }
 
 }
