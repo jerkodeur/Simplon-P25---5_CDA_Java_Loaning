@@ -36,7 +36,7 @@ final class CliInputs {
 	 * @param request
 	 * @param method
 	 */
-	public Builder(ScheduleMethod method, Request request) {
+	Builder(ScheduleMethod method, Request request) {
 	    this.request = request;
 	    this.method = method;
 	    method(method);

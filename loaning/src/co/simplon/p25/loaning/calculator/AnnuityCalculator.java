@@ -27,7 +27,7 @@ final class AnnuityCalculator extends AbstractCalculator {
     /**
      * Calculate and set current schedule principal.
      */
-    final void setPrincipal() {
+    final private void setPrincipal() {
 	principal = total - interests;
     }
 
